@@ -36,7 +36,7 @@ public:
 		return int(matrix.size());
 	}
 
-	int GetNumCols() const {
+	int GetNumColumns() const {
 		return int(matrix[0].size());
 	}
 
@@ -71,7 +71,7 @@ istream& operator >> (istream& stream, Matrix& matrix) {
 
 ostream& operator << (ostream& stream, const Matrix& matrix) {
 	int num_rows = matrix.GetNumRows();
-	int num_cols = matrix.GetNumCols();
+	int num_cols = matrix.GetNumColumns();
 	cout << num_rows << " " << num_cols << endl;
 	for (int i = 0; i < num_rows; ++i) {
 		for (int j = 0; j < num_cols; ++j) {
@@ -84,8 +84,8 @@ ostream& operator << (ostream& stream, const Matrix& matrix) {
 
 bool operator == (const Matrix& lhs, const Matrix& rhs) {
 	int num_rows = lhs.GetNumRows();
-	int num_cols = lhs.GetNumCols();
-	if (num_rows != rhs.GetNumRows() || num_cols != rhs.GetNumCols()) {
+	int num_cols = lhs.GetNumColumns();
+	if (num_rows != rhs.GetNumRows() || num_cols != rhs.GetNumColumns()) {
 		return false;
 	}
 	for (int i = 0; i < num_rows; ++i) {
@@ -100,8 +100,8 @@ bool operator == (const Matrix& lhs, const Matrix& rhs) {
 
 Matrix operator + (const Matrix& lhs, const Matrix& rhs) {
 	int num_rows = lhs.GetNumRows();
-	int num_cols = lhs.GetNumCols();
-	if (num_rows != rhs.GetNumRows() || num_cols != rhs.GetNumCols()) {
+	int num_cols = lhs.GetNumColumns();
+	if (num_rows != rhs.GetNumRows() || num_cols != rhs.GetNumColumns()) {
 		throw invalid_argument("Fatality argument!");
 	}
 	Matrix matrix(num_rows, num_cols);
