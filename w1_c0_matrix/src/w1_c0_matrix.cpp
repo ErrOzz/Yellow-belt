@@ -16,6 +16,7 @@ public:
 
 	void Reset(const int& num_rows, const int& num_cols) {
 		IsNegativeArgs(num_rows, num_cols);
+		n_cols = num_cols;
 		vector<int> row(num_cols);
 		matrix.assign(num_rows, row);
 	}
@@ -37,7 +38,7 @@ public:
 	}
 
 	int GetNumColumns() const {
-		return int(matrix[0].size());
+		return n_cols;
 	}
 
 private:
@@ -49,12 +50,13 @@ private:
 	}
 
 	void IsOutOfRangeArgs (const int& num_row, const int& num_col) const {
-		if (static_cast<size_t>(num_row) > matrix.size() - 1 || static_cast<size_t>(num_col) > matrix[0].size()) {
+		if (size_t(num_row) + 1 > matrix.size() || size_t(num_col) + 1 > matrix[0].size()) {
 			throw out_of_range("Shang Tsung argument!");
 		}
 	}
 
 	vector<vector<int>> matrix;
+	int n_cols = 0;
 };
 
 istream& operator >> (istream& stream, Matrix& matrix) {
@@ -72,7 +74,7 @@ istream& operator >> (istream& stream, Matrix& matrix) {
 ostream& operator << (ostream& stream, const Matrix& matrix) {
 	int num_rows = matrix.GetNumRows();
 	int num_cols = matrix.GetNumColumns();
-	cout << num_rows << " " << num_cols << endl;
+	stream << num_rows << " " << num_cols << endl;
 	for (int i = 0; i < num_rows; ++i) {
 		for (int j = 0; j < num_cols; ++j) {
 			stream << matrix.At(i, j) << [&] {	if (j + 1 != num_cols) return " ";
