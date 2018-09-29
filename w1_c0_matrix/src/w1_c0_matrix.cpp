@@ -1,5 +1,8 @@
 #include <iostream>
+#include <fstream>
+#include <stdexcept>
 #include <vector>
+
 using namespace std;
 
 class Matrix {
@@ -30,11 +33,11 @@ public:
 	}
 
 	int GetNumRows() const {
-		return matrix.size();
+		return int(matrix.size());
 	}
 
 	int GetNumCols() const {
-		return matrix[0].size();
+		return int(matrix[0].size());
 	}
 
 private:
@@ -54,9 +57,67 @@ private:
 	vector<vector<int>> matrix;
 };
 
+istream& operator >> (istream& stream, Matrix& matrix) {
+	int num_rows, num_cols;
+	stream >> num_rows >> num_cols;
+	matrix.Reset(num_rows, num_cols);
+	for (int i = 0; i < num_rows; ++i) {
+		for (int j = 0; j < num_cols; ++j) {
+			stream >> matrix.At(i, j);
+		}
+	}
+	return stream;
+}
+
+ostream& operator << (ostream& stream, const Matrix& matrix) {
+	int num_rows = matrix.GetNumRows();
+	int num_cols = matrix.GetNumCols();
+	cout << num_rows << " " << num_cols << endl;
+	for (int i = 0; i < num_rows; ++i) {
+		for (int j = 0; j < num_cols; ++j) {
+			stream << matrix.At(i, j) << [&] {	if (j + 1 != num_cols) return " ";
+												else return "\n";	}();
+		}
+	}
+	return stream;
+}
+
+bool operator == (const Matrix& lhs, const Matrix& rhs) {
+	int num_rows = lhs.GetNumRows();
+	int num_cols = lhs.GetNumCols();
+	if (num_rows != rhs.GetNumRows() || num_cols != rhs.GetNumCols()) {
+		return false;
+	}
+	for (int i = 0; i < num_rows; ++i) {
+		for (int j = 0; j < num_cols; ++j) {
+			if (lhs.At(i, j) != rhs.At(i, j)) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+Matrix operator + (const Matrix& lhs, const Matrix& rhs) {
+	int num_rows = lhs.GetNumRows();
+	int num_cols = lhs.GetNumCols();
+	if (num_rows != rhs.GetNumRows() || num_cols != rhs.GetNumCols()) {
+		throw invalid_argument("Fatality argument!");
+	}
+	Matrix matrix(num_rows, num_cols);
+	for (int i = 0; i < num_rows; ++i) {
+		for (int j = 0; j < num_cols; ++j) {
+			matrix.At(i, j) = lhs.At(i, j) + rhs.At(i, j);
+		}
+	}
+	return matrix;
+}
+
 int main() {
-	Matrix tmp(2, 2);
-	tmp.At(0, 0) = 5;
-	cout << tmp.At(1, 0);
-	return 0;
+	  Matrix one;
+	  Matrix two;
+
+	  cin >> one >> two;
+	  cout << one + two << endl;
+	  return 0;
 }
