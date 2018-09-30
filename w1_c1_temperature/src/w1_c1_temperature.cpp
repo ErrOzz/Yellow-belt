@@ -28,4 +28,5 @@ int main() {
 		cout << day << " ";
 	}
 	return 0;
+
 }
