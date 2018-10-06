@@ -28,7 +28,7 @@ public:
     ++devs_tasks_[person][TaskStatus::NEW];
   }
 
-  // Обновить статусы по данному количеству задач конкретного разработчика,
+  // Обновить статусы по данному количеству задач конкретного разработчика
   tuple<TasksInfo, TasksInfo> PerformPersonTasks(const string& person, int task_count) {
 	  auto& dev_tasks_ = devs_tasks_[person];
 	  vector<TaskStatus> tasks_;
