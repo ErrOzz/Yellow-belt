@@ -51,12 +51,11 @@ istream& operator >> (istream& is, Query& q) {
 }
 
 struct BusesForStopResponse {
-	bool no_stop_ = true;
 	vector<string> buses_;
 };
 
 ostream& operator << (ostream& os, const BusesForStopResponse& r) {
-  if (r.no_stop_) {
+  if (r.buses_.empty()) {
 	  os << "No stop";
 	  return os;
   }
@@ -72,14 +71,13 @@ ostream& operator << (ostream& os, const BusesForStopResponse& r) {
 }
 
 struct StopsForBusResponse {
-  bool no_bus_ = true;
   string bus_;
   vector<string> stops_;
   map<string, vector<string>> stop_to_buses_;
 };
 
 ostream& operator << (ostream& os, const StopsForBusResponse& r) {
-  if (r.no_bus_) {
+  if (r.stops_.empty()) {
 	os << "No bus";
 	return os;
   }
@@ -89,8 +87,7 @@ ostream& operator << (ostream& os, const StopsForBusResponse& r) {
 		  os << endl;
 	  }
 	  first_str = false;
-	  os << "Stop ";
-	  os << stop << ":";
+	  os << "Stop " << stop << ":";
 	  if (r.stop_to_buses_.at(stop).size() == 1) {
 		  os << " no interchange";
 	  } else {
@@ -105,12 +102,11 @@ ostream& operator << (ostream& os, const StopsForBusResponse& r) {
 }
 
 struct AllBusesResponse {
-	bool no_buses_ = true;
 	map<string, vector<string>> all_buses_;
 };
 
 ostream& operator << (ostream& os, const AllBusesResponse& r) {
-  if (r.no_buses_) {
+  if (r.all_buses_.empty()) {
 	os << "No buses";
 	return os;
   }
@@ -141,18 +137,15 @@ public:
 	  }
   }
   BusesForStopResponse GetBusesForStop(const string& stop) const {
-	  BusesForStopResponse r;
 	  if (stops_to_buses.count(stop) != 0) {
-		  r.no_stop_ = false;
-		  r.buses_ = stops_to_buses.at(stop);
+		  return BusesForStopResponse{stops_to_buses.at(stop)};
 	  }
-	  return r;
+	  return BusesForStopResponse{};
   }
 
   StopsForBusResponse GetStopsForBus(const string& bus) const {
 	  StopsForBusResponse r;
 	  if (buses_to_stops.count(bus) != 0) {
-		  r.no_bus_ = false;
 		  r.bus_ = bus;
 		  r.stops_ = buses_to_stops.at(bus);
 		  r.stop_to_buses_ = stops_to_buses;
@@ -161,12 +154,7 @@ public:
   }
 
   AllBusesResponse GetAllBuses() const {
-	AllBusesResponse r;
-	if (!buses_to_stops.empty()) {
-		r.no_buses_ = false;
-		r.all_buses_ = buses_to_stops;
-	}
-    return r;
+    return AllBusesResponse{buses_to_stops};
   }
 };
 
